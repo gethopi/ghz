@@ -39,6 +39,7 @@ type Worker struct {
 	metadataProvider MetadataProviderFunc
 	msgProvider      StreamMessageProviderFunc
 
+	messageRecv RecvMsgInterceptFunc
 	streamRecv StreamRecvMsgInterceptFunc
 }
 
@@ -175,6 +176,12 @@ func (w *Worker) makeUnaryRequest(ctx *context.Context, reqMD *metadata.MD, inpu
 	}
 
 	res, resErr = w.stub.InvokeRpc(*ctx, w.mtd, input, callOptions...)
+
+	if w.messageRecv != nil {
+		if converted, ok := res.(*dynamic.Message); ok {
+			w.messageRecv(converted, resErr)
+		}
+	}
 
 	if w.config.hasLog {
 		w.config.log.Debugw("Received response", "workerID", w.workerID, "call type", "unary",

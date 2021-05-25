@@ -51,6 +51,9 @@ func TestRunUnary(t *testing.T) {
 			WithDialTimeout(time.Duration(20*time.Second)),
 			WithData(data),
 			WithInsecure(true),
+			WithRecvMsgIntercept(func(message *dynamic.Message, err error) {
+				assert.NotEmpty(t, message.String())
+			}),
 		)
 
 		assert.NoError(t, err)

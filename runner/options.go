@@ -121,12 +121,13 @@ type RunConfig struct {
 	log    Logger
 
 	// misc
-	name        string
-	cpus        int
-	tags        []byte
-	skipFirst   int
-	countErrors bool
-	recvMsgFunc StreamRecvMsgInterceptFunc
+	name           string
+	cpus           int
+	tags           []byte
+	skipFirst      int
+	countErrors    bool
+	recvMsgFunc    RecvMsgInterceptFunc
+	recvStrMsgFunc StreamRecvMsgInterceptFunc
 }
 
 // Option controls some aspect of run
@@ -971,6 +972,14 @@ func WithWorkerTicker(ticker load.WorkerTicker) Option {
 //	})
 //
 func WithStreamRecvMsgIntercept(fn StreamRecvMsgInterceptFunc) Option {
+	return func(o *RunConfig) error {
+		o.recvStrMsgFunc = fn
+
+		return nil
+	}
+}
+
+func WithRecvMsgIntercept(fn RecvMsgInterceptFunc) Option {
 	return func(o *RunConfig) error {
 		o.recvMsgFunc = fn
 

@@ -386,7 +386,8 @@ func (b *Requester) runWorkers(wt load.WorkerTicker, p load.Pacer) error {
 						workerID:         wID,
 						dataProvider:     b.dataProvider,
 						metadataProvider: b.metadataProvider,
-						streamRecv:       b.config.recvMsgFunc,
+						messageRecv:      b.config.recvMsgFunc,
+						streamRecv:       b.config.recvStrMsgFunc,
 						msgProvider:      b.config.dataStreamFunc,
 					}
 
