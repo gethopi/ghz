@@ -1,0 +1,15 @@
+name: check-branch-name
+
+on:
+  pull_request
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: check HOP ticket number in the branch
+      if: contains(github.head_ref, 'HOP-') == false
+      run: echo "branch name doesn't have HOP- ticket number"; exit 1
